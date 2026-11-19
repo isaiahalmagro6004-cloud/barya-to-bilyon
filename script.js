@@ -338,6 +338,149 @@
     }
   ];
 
+  const LUXURY_ITEMS = [
+    {
+      id: "swiss_watch",
+      category: "Watches & Fine Art",
+      name: "Swiss Mechanical Chronograph Watch",
+      price: 380000,
+      repGain: 4,
+      happyGain: 5,
+      desc: "Hand-assembled perpetual calendar timepiece for executive boardrooms."
+    },
+    {
+      id: "filipino_art",
+      category: "Watches & Fine Art",
+      name: "Signed Filipino Masterpiece Painting",
+      price: 1850000,
+      repGain: 12,
+      happyGain: 7,
+      desc: "Museum-grade gallery oil canvas curated in Makati."
+    },
+    {
+      id: "sports_coupe",
+      category: "Supercars & Garage",
+      name: "European Sports Coupe (911 Carrera)",
+      price: 11500000,
+      repGain: 25,
+      happyGain: 12,
+      desc: "Twin-turbo weekend grand tourer built for Skyway & Tagaytay runs."
+    },
+    {
+      id: "italian_hypercar",
+      category: "Supercars & Garage",
+      name: "Bespoke V12 Italian Supercar",
+      price: 34000000,
+      repGain: 55,
+      happyGain: 16,
+      desc: "Limited-allocation carbon-fiber flagship turning heads across BGC."
+    },
+    {
+      id: "armored_sedan",
+      category: "Supercars & Garage",
+      name: "Armored Executive Flagship & Chauffeur",
+      price: 58000000,
+      repGain: 80,
+      happyGain: 14,
+      desc: "VR9 ballistic-rated luxury limousine with full-time security detail."
+    },
+    {
+      id: "exec_heli",
+      category: "Aviation & Marine",
+      name: "Twin-Engine Executive Helicopter",
+      price: 220000000,
+      repGain: 180,
+      happyGain: 18,
+      desc: "Skip Metro Manila traffic with direct Makati-to-Tagaytay helipad hops."
+    },
+    {
+      id: "superyacht",
+      category: "Aviation & Marine",
+      name: "65-Meter Custom Superyacht",
+      price: 1650000000,
+      repGain: 650,
+      happyGain: 24,
+      desc: "Ocean-going tri-deck yacht berthed at Manila Yacht Club & Subic Bay."
+    },
+    {
+      id: "private_jet",
+      category: "Aviation & Marine",
+      name: "Ultra-Long-Range Private Jet",
+      price: 4200000000,
+      repGain: 1500,
+      happyGain: 30,
+      desc: "Nonstop Manila-to-New York flagship aircraft with private hangar crew."
+    }
+  ];
+
+  const VACATIONS = [
+    {
+      id: "boracay_villa",
+      name: "Boracay Beachfront Villa Weekend",
+      cost: 85000,
+      happyGain: 22,
+      healthGain: 12,
+      energyGain: 35,
+      repGain: 5,
+      desc: "Three-night private cliffside suite overlooking White Beach."
+    },
+    {
+      id: "siargao_charter",
+      name: "Siargao Private Yacht & Surf Charter",
+      cost: 280000,
+      happyGain: 30,
+      healthGain: 18,
+      energyGain: 50,
+      repGain: 12,
+      desc: "Island-hopping lagoon charter with private chef and dive guides."
+    },
+    {
+      id: "amanpulo_sanctuary",
+      name: "Amanpulo Private Island Sanctuary",
+      cost: 950000,
+      happyGain: 100,
+      healthGain: 100,
+      energyGain: 100,
+      repGain: 35,
+      desc: "Full-week Pamalican Island casita retreat restoring complete vitality."
+    }
+  ];
+
+  const CHARITIES = [
+    {
+      id: "scholarship_drive",
+      name: "Barangay Scholarship & Laptop Drive",
+      amount: 500000,
+      repGain: 45,
+      happyGain: 15,
+      desc: "Funds college tuition and workstations for 40 deserving local students."
+    },
+    {
+      id: "medical_mission",
+      name: "Provincial Hospital & Medical Mission",
+      amount: 15000000,
+      repGain: 180,
+      happyGain: 25,
+      desc: "Equips regional clinics with modern diagnostic imaging and mobile ambulances."
+    },
+    {
+      id: "disaster_foundation",
+      name: "National Disaster Resilience Foundation",
+      amount: 250000000,
+      repGain: 850,
+      happyGain: 35,
+      desc: "Builds typhoon-proof evacuation centers and solar microgrids nationwide."
+    },
+    {
+      id: "sovereign_endowment",
+      name: "Philippine Clean Energy & Education Endowment",
+      amount: 10000000000,
+      repGain: 5000,
+      happyGain: 50,
+      desc: "Generational ₱10 Billion philanthropic endowment transforming national research."
+    }
+  ];
+
   const RANDOM_EVENTS = [
     {
       id: "typhoon_delay",
@@ -508,6 +651,7 @@
     }
   ];
 
+  // Web Audio Synthesizer (Zero external files)
   const SoundEngine = {
     ctx: null,
     init: function () {
@@ -616,6 +760,9 @@
       courseProgress: {},
       businesses: [],
       properties: [],
+      luxuries: [],
+      totalDonated: 0,
+      vacationsTaken: 0,
       netWorthHistory: [{ label: "Y1 M1", value: 2500 }],
       lastMonthLedger: null,
       activityLog: [
@@ -633,6 +780,7 @@
 
   let state = loadState();
   let activeTab = "home";
+  let assetsSubTab = "realestate";
   let modalOpen = false;
   let activeModalKind = null;
   let activeBusinessUid = null;
@@ -642,10 +790,12 @@
   let devTapCount = 0;
   let toastTimer = null;
 
+  // Rolling counter animation state
   let displayedCash = state.cash;
   let displayedNetWorth = calcNetWorth(state);
   let animFrameId = null;
 
+  // 15-second passive clock state (no offline catch-up)
   let dayElapsedMs = 0;
   let lastTickTs = performance.now();
 
@@ -686,6 +836,10 @@
     return PROPERTIES.find(function (p) { return p.id === id; }) || PROPERTIES[0];
   }
 
+  function getLuxuryDef(id) {
+    return LUXURY_ITEMS.find(function (l) { return l.id === id; }) || LUXURY_ITEMS[0];
+  }
+
   function getBizValue(biz) {
     const def = getBizType(biz.typeId);
     const levelBonus = 1 + (biz.level - 1) * 0.4;
@@ -701,11 +855,15 @@
     (s.properties || []).forEach(function (p) {
       total += p.currentValue || 0;
     });
+    (s.luxuries || []).forEach(function (l) {
+      total += l.currentValue || 0;
+    });
     return Math.round(total);
   }
 
   function calcMonthlyBizMetrics(biz) {
     const def = getBizType(biz.typeId);
+    // Medium profitability curve: first 3 to 6 months ramp up from 0.56 to 1.04
     let rampFactor = 1.05;
     if (biz.monthsOpen === 0) rampFactor = 0.56;
     else if (biz.monthsOpen === 1) rampFactor = 0.66;
@@ -790,7 +948,7 @@
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(state));
     } catch (e) {
-      // Storage quota fallback
+      // Ignore quota errors gracefully
     }
   }
 
@@ -907,6 +1065,7 @@
     animateHeaderNumbers();
   }
 
+  // Burnout / Hospitalization Recovery (No Permanent Game Over)
   function checkBurnout() {
     if (state.health > 0 && state.energy > 0) return false;
     const isHealthCrisis = state.health <= 0;
@@ -937,6 +1096,7 @@
     addLog((isHealthCrisis ? "Hospitalized" : "Exhaustion burnout") + ": lost 3 days (" + formatPeso(bill) + " bill).");
     SoundEngine.playError();
 
+    // Advance 3 days safely without re-triggering burnout recursively
     for (let i = 0; i < 3; i++) {
       advanceDayInternal(true);
     }
@@ -970,6 +1130,7 @@
     state.health = clamp(state.health + life.healthRegen, 0, 100);
     state.happiness = clamp(state.happiness + life.happyDelta, 0, 100);
 
+    // Business daily operations & staff morale
     state.businesses.forEach(function (biz) {
       biz.daysOpen += 1;
       const hasCoManager = Boolean(biz.staff.comanager);
@@ -993,6 +1154,7 @@
         state.reputation += 0.15;
       }
 
+      // Daily staff morale checks
       STAFF_ROLES.forEach(function (role) {
         const emp = biz.staff[role.key];
         if (!emp) return;
@@ -1003,11 +1165,13 @@
         if (hasCoManager && role.key !== "comanager") moraleDelta += 0.5;
         emp.morale = clamp(emp.morale + moraleDelta, 0, 100);
 
+        // Cash register shortage if low morale
         if (emp.morale < 40 && Math.random() < 0.08) {
           const shortage = Math.min(2500, Math.round(emp.salary * 0.08));
           state.cash -= shortage;
           addLog(emp.name + " had a " + formatPeso(shortage) + " register shortage at " + biz.name + ".");
         }
+        // Resignation if critically low morale
         if (emp.morale < 20 && Math.random() < 0.35) {
           const resignedName = emp.name;
           biz.staff[role.key] = null;
@@ -1019,6 +1183,7 @@
 
     state.reputation = Math.round(state.reputation * 100) / 100;
 
+    // Monthly cycle every 30 days
     if (state.day > 30) {
       state.day = 1;
       state.month += 1;
@@ -1031,6 +1196,7 @@
       processMonthlyCycle();
     }
 
+    // Random real-life event trigger
     if (!skipRandomEvent && !modalOpen && state.totalDays - state.lastEventDay >= 5) {
       const chance = state.businesses.length > 0 ? 0.15 : 0.09;
       if (Math.random() < chance) {
@@ -1047,6 +1213,7 @@
     let rentIncome = 0;
     let interestEarned = 0;
 
+    // 1. Salary Settlement
     const job = getJob(state.jobId);
     if (job) {
       if (state.shiftsThisMonth >= 10) {
@@ -1074,12 +1241,14 @@
     }
     state.shiftsThisMonth = 0;
 
+    // 2. Savings Interest (4.5% p.a. paid monthly)
     if (state.savings > 0) {
       interestEarned = Math.round(state.savings * (0.045 / 12));
       state.savings += interestEarned;
       totalIncome += interestEarned;
     }
 
+    // 3. Businesses Monthly Settlement
     state.businesses.forEach(function (biz) {
       const metrics = calcMonthlyBizMetrics(biz);
       biz.monthsOpen += 1;
@@ -1091,6 +1260,7 @@
       totalIncome += metrics.net;
     });
 
+    // 4. Property Rental Yield & Appreciation
     state.properties.forEach(function (prop) {
       const def = getPropDef(prop.propId);
       prop.monthsOwned += 1;
@@ -1100,6 +1270,7 @@
       totalIncome += def.monthlyRent;
     });
 
+    // 5. Realistic Monthly Living Expenses
     const life = getLifestyle(state.lifestyleId);
     const livingCost = life.rent + life.food + life.utilities + life.load;
     state.cash -= livingCost;
@@ -1115,6 +1286,7 @@
       netCashFlow: netCashFlow
     };
 
+    // Record Net Worth snapshot for SVG chart
     state.netWorthHistory.push({
       label: "Y" + state.year + " M" + state.month,
       value: calcNetWorth(state)
@@ -1159,6 +1331,7 @@
     });
   }
 
+  // SVG Net Worth Chart Builder
   function buildNetWorthSvg(history) {
     const pts = history.length >= 2 ? history : [history[0], history[0]];
     const width = 380;
@@ -1220,6 +1393,7 @@
     );
   }
 
+  // Tab Renderers
   function renderHomeTab() {
     const life = getLifestyle(state.lifestyleId);
     const job = getJob(state.jobId);
@@ -1538,6 +1712,144 @@
   }
 
   function renderAssetsTab() {
+    const subNavHtml =
+      '<div class="segmented" role="tablist" aria-label="Asset categories">' +
+      '<button class="seg-btn ' + (assetsSubTab === "realestate" ? "active" : "") + '" type="button" data-action="set-assets-subtab" data-val="realestate">Real Estate</button>' +
+      '<button class="seg-btn ' + (assetsSubTab === "luxury" ? "active" : "") + '" type="button" data-action="set-assets-subtab" data-val="luxury">Luxury Vault</button>' +
+      '<button class="seg-btn ' + (assetsSubTab === "experiences" ? "active" : "") + '" type="button" data-action="set-assets-subtab" data-val="experiences">Trips & Giving</button>' +
+      "</div>";
+
+    if (assetsSubTab === "luxury") {
+      const luxList = state.luxuries || [];
+      const luxValue = luxList.reduce(function (sum, l) { return sum + l.currentValue; }, 0);
+      const ownedLuxHtml = luxList.length === 0
+        ? '<p class="card-subtitle">Your luxury garage and vault are empty. Acquire watches, fine art, supercars, yachts, or private jets below.</p>'
+        : luxList.map(function (item) {
+            const def = getLuxuryDef(item.itemId);
+            const sellVal = item.currentValue;
+            return (
+              '<div class="staff-row">' +
+              '<div class="staff-top">' +
+              "<div>" +
+              '<div class="staff-role">' + def.category + "</div>" +
+              '<div class="staff-name">' + def.name + "</div>" +
+              '<div class="meta-line num">' +
+              '<span class="text-gold">Resale: ' + formatPeso(sellVal) + "</span>" +
+              '<span aria-hidden="true">·</span>' +
+              "<span>+" + def.repGain + " Rep</span>" +
+              "</div>" +
+              "</div>" +
+              '<button class="btn btn-danger btn-sm" type="button" data-action="sell-luxury" data-id="' + item.uid + '">Sell</button>' +
+              "</div>" +
+              "</div>"
+            );
+          }).join("");
+
+      const catalogLuxHtml = LUXURY_ITEMS.map(function (item) {
+        const canAfford = state.cash >= item.price;
+        return (
+          '<div class="card">' +
+          '<div class="card-header">' +
+          "<div>" +
+          '<div class="staff-role">' + item.category + "</div>" +
+          '<div class="card-title">' + item.name + "</div>" +
+          '<div class="meta-line num">' +
+          '<span class="text-emerald">+' + item.happyGain + " Happy</span>" +
+          '<span aria-hidden="true">·</span>' +
+          '<span class="text-gold">+' + item.repGain.toLocaleString("en-US") + " Rep</span>" +
+          "</div>" +
+          "</div>" +
+          '<button class="btn ' + (canAfford ? "btn-emerald" : "btn-secondary") + ' btn-sm" type="button" data-action="buy-luxury" data-id="' + item.id + '">Buy</button>' +
+          "</div>" +
+          '<div class="num text-gold" style="font-size:14px;font-weight:700;">' + formatPeso(item.price) + "</div>" +
+          '<p class="card-subtitle">' + item.desc + "</p>" +
+          "</div>"
+        );
+      }).join("");
+
+      return (
+        subNavHtml +
+        '<section class="card">' +
+        '<div class="card-header">' +
+        "<div>" +
+        '<h1 class="card-title">Personal Luxury Collection</h1>' +
+        '<p class="card-subtitle">Collectibles retain 85% resale value in your Net Worth.</p>' +
+        "</div>" +
+        '<div style="text-align:right;">' +
+        '<div class="finance-label">Vault Value</div>' +
+        '<div class="num text-gold" style="font-weight:700;">' + formatPeso(luxValue) + "</div>" +
+        "</div>" +
+        "</div>" +
+        ownedLuxHtml +
+        "</section>" +
+        '<div class="section-heading-row"><h2 class="section-heading">Luxury Store & Garage</h2><span class="section-meta">Watches to Private Jets</span></div>' +
+        catalogLuxHtml
+      );
+    }
+
+    if (assetsSubTab === "experiences") {
+      const vacHtml = VACATIONS.map(function (v) {
+        const canAfford = state.cash >= v.cost;
+        return (
+          '<div class="card">' +
+          '<div class="card-header">' +
+          "<div>" +
+          '<div class="card-title">' + v.name + "</div>" +
+          '<div class="meta-line num">' +
+          '<span class="text-gold">' + formatPeso(v.cost) + "</span>" +
+          '<span aria-hidden="true">·</span>' +
+          '<span class="text-emerald">+' + v.happyGain + " Happy · +" + v.repGain + " Rep</span>" +
+          "</div>" +
+          "</div>" +
+          '<button class="btn ' + (canAfford ? "btn-emerald" : "btn-secondary") + ' btn-sm" type="button" data-action="book-vacation" data-id="' + v.id + '">Book</button>' +
+          "</div>" +
+          '<p class="card-subtitle">' + v.desc + "</p>" +
+          "</div>"
+        );
+      }).join("");
+
+      const charityHtml = CHARITIES.map(function (c) {
+        const canAfford = state.cash >= c.amount;
+        return (
+          '<div class="card">' +
+          '<div class="card-header">' +
+          "<div>" +
+          '<div class="card-title">' + c.name + "</div>" +
+          '<div class="meta-line num">' +
+          '<span class="text-gold">' + formatPeso(c.amount) + "</span>" +
+          '<span aria-hidden="true">·</span>' +
+          '<span class="text-emerald">+' + c.repGain.toLocaleString("en-US") + " Rep · +" + c.happyGain + " Happy</span>" +
+          "</div>" +
+          "</div>" +
+          '<button class="btn ' + (canAfford ? "btn-primary" : "btn-secondary") + ' btn-sm" type="button" data-action="donate-charity" data-id="' + c.id + '">Donate</button>' +
+          "</div>" +
+          '<p class="card-subtitle">' + c.desc + "</p>" +
+          "</div>"
+        );
+      }).join("");
+
+      return (
+        subNavHtml +
+        '<section class="card">' +
+        '<h1 class="card-title">Prestige & Philanthropy Summary</h1>' +
+        '<div class="luxury-stats-row">' +
+        '<div class="luxury-stat-box">' +
+        '<span class="finance-label">Total Donated</span>' +
+        '<span class="num text-emerald" style="font-weight:700;">' + formatPeso(state.totalDonated || 0) + "</span>" +
+        "</div>" +
+        '<div class="luxury-stat-box">' +
+        '<span class="finance-label">Luxury Trips Taken</span>' +
+        '<span class="num text-gold" style="font-weight:700;">' + (state.vacationsTaken || 0) + " Trips</span>" +
+        "</div>" +
+        "</div>" +
+        "</section>" +
+        '<div class="section-heading-row"><h2 class="section-heading">Philippine Luxury Vacations</h2><span class="section-meta">Restore Vitals & Prestige</span></div>' +
+        vacHtml +
+        '<div class="section-heading-row"><h2 class="section-heading">Philanthropy Foundations</h2><span class="section-meta">Legacy & Reputation</span></div>' +
+        charityHtml
+      );
+    }
+
     const ownedValue = state.properties.reduce(function (sum, p) { return sum + p.currentValue; }, 0);
     const ownedRent = state.properties.reduce(function (sum, p) { return sum + getPropDef(p.propId).monthlyRent; }, 0);
 
@@ -1608,6 +1920,7 @@
     }).join("");
 
     return (
+      subNavHtml +
       '<section class="card">' +
       '<div class="card-header">' +
       "<div>" +
@@ -1649,7 +1962,9 @@
 
     const bizEquity = state.businesses.reduce(function (s, b) { return s + getBizValue(b); }, 0);
     const propEquity = state.properties.reduce(function (s, p) { return s + p.currentValue; }, 0);
+    const luxEquity = (state.luxuries || []).reduce(function (s, l) { return s + l.currentValue; }, 0);
 
+    // Preserve active input value if focused
     const existingInput = document.getElementById("bank-amount-input");
     const preservedVal = existingInput ? existingInput.value : "";
 
@@ -1708,6 +2023,7 @@
       '<div class="ledger-row"><span>BayadVault Savings</span><span class="num">' + formatPeso(state.savings) + "</span></div>" +
       '<div class="ledger-row"><span>Business Equity</span><span class="num">' + formatPeso(bizEquity) + "</span></div>" +
       '<div class="ledger-row"><span>Real Estate Holdings</span><span class="num">' + formatPeso(propEquity) + "</span></div>" +
+      '<div class="ledger-row"><span>Luxury Collectibles</span><span class="num">' + formatPeso(luxEquity) + "</span></div>" +
       '<div class="divider"></div>' +
       '<div class="ledger-row" style="font-weight:700;"><span>Total Net Worth</span><span class="num text-emerald">' + formatPeso(calcNetWorth(state)) + "</span></div>" +
       buildNetWorthSvg(state.netWorthHistory) +
@@ -1750,6 +2066,7 @@
     renderMainTab();
   }
 
+  // Modal System
   function openModal(kind, title, bodyBuilder) {
     activeModalKind = kind;
     modalOpen = true;
@@ -1881,16 +2198,42 @@
     openModal("settings", "Settings & Save Data", function () {
       const devHtml = state.settings.devUnlocked
         ? '<div class="dev-panel">' +
-          '<h3 class="dev-panel-title">Developer Mode</h3>' +
+          '<h3 class="dev-panel-title">All-in-One Developer Toolkit</h3>' +
+          '<div class="dev-group-label">Cash & Net Worth</div>' +
           '<div class="dev-grid">' +
           '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-cash" data-amt="1000000">+₱1,000,000</button>' +
           '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-cash" data-amt="1000000000">+₱1,000,000,000</button>' +
           '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-cash" data-amt="100000000000">+₱100,000,000,000</button>' +
-          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-restore">Restore 100% Stats</button>' +
-          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-month">Advance +1 Month</button>' +
-          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-year">Advance +1 Year</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-cash" data-amt="1000000000000">+₱1,000,000,000,000</button>' +
           "</div>" +
-          '<button class="btn btn-gold btn-sm btn-full" type="button" data-action="dev-event">Trigger Random Real-Life Event</button>' +
+          '<div class="dev-input-row">' +
+          '<input id="dev-cash-input" class="text-input num" type="number" min="0" step="1" placeholder="Custom ₱ amount" />' +
+          '<button class="btn btn-emerald btn-sm" type="button" data-action="dev-custom-cash">Add</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-set-cash">Set</button>' +
+          "</div>" +
+          '<div class="dev-group-label">Career, Vitals & Reputation</div>' +
+          '<div class="dev-grid">' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-restore">100% Vitals</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-rep">+100 Reputation</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-unlock-career">Unlock All Certs</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-exp">+96 Mos Exp</button>' +
+          "</div>" +
+          '<div class="dev-group-label">Negosyo & Staff Boosts</div>' +
+          '<div class="dev-grid">' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-max-biz">Max All Negosyo</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-max-staff">100% Staff Stats</button>' +
+          "</div>" +
+          '<div class="dev-group-label">Time & Events</div>' +
+          '<div class="dev-grid">' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-day">+1 Day</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-month">+1 Month</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-year">+1 Year</button>' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-action="dev-age">+1 Age</button>' +
+          "</div>" +
+          '<div class="dev-grid">' +
+          '<button class="btn btn-gold btn-sm" type="button" data-action="dev-event">Trigger Event</button>' +
+          '<button class="btn btn-danger btn-sm" type="button" data-action="dev-lock">Hide Dev Mode</button>' +
+          "</div>" +
           "</div>"
         : "";
 
@@ -1951,6 +2294,7 @@
     return JSON.parse(json);
   }
 
+  // Action Handlers
   function handleAction(action, target) {
     if (action === "close-modal") {
       SoundEngine.playClick();
@@ -2369,6 +2713,105 @@
       return;
     }
 
+    if (action === "set-assets-subtab") {
+      assetsSubTab = target.getAttribute("data-val") || "realestate";
+      SoundEngine.playClick();
+      renderMainTab();
+      return;
+    }
+
+    if (action === "buy-luxury") {
+      const item = getLuxuryDef(target.getAttribute("data-id"));
+      if (state.cash < item.price) {
+        SoundEngine.playError();
+        showToast("Need " + formatPeso(item.price) + " cash on hand.", "error");
+        return;
+      }
+      state.cash -= item.price;
+      if (!state.luxuries) state.luxuries = [];
+      state.luxuries.push({
+        uid: "lux_" + Date.now() + "_" + Math.floor(Math.random() * 999),
+        itemId: item.id,
+        purchasePrice: item.price,
+        currentValue: Math.round(item.price * 0.85),
+        category: item.category
+      });
+      state.reputation += item.repGain;
+      state.happiness = clamp(state.happiness + item.happyGain, 0, 100);
+      spawnDelta(-item.price);
+      addLog("Bought " + item.name + " (" + formatPeso(item.price) + ").");
+      SoundEngine.playCash();
+      showToast("Acquired " + item.name + " (+" + item.repGain + " Rep)!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "sell-luxury") {
+      const uid = target.getAttribute("data-id");
+      if (!state.luxuries) state.luxuries = [];
+      const idx = state.luxuries.findIndex(function (l) { return l.uid === uid; });
+      if (idx === -1) return;
+      const item = state.luxuries[idx];
+      const def = getLuxuryDef(item.itemId);
+      const sellVal = item.currentValue;
+      state.luxuries.splice(idx, 1);
+      state.cash += sellVal;
+      spawnDelta(sellVal);
+      addLog("Sold " + def.name + " for " + formatPeso(sellVal) + ".");
+      SoundEngine.playCash();
+      showToast("Sold " + def.name + " for " + formatPeso(sellVal) + ".", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "book-vacation") {
+      const vacId = target.getAttribute("data-id");
+      const vac = VACATIONS.find(function (v) { return v.id === vacId; });
+      if (!vac) return;
+      if (state.cash < vac.cost) {
+        SoundEngine.playError();
+        showToast("Need " + formatPeso(vac.cost) + " cash for this trip.", "error");
+        return;
+      }
+      state.cash -= vac.cost;
+      state.happiness = clamp(state.happiness + vac.happyGain, 0, 100);
+      state.health = clamp(state.health + vac.healthGain, 0, 100);
+      state.energy = clamp(state.energy + vac.energyGain, 0, 100);
+      state.reputation += vac.repGain;
+      state.vacationsTaken = (state.vacationsTaken || 0) + 1;
+      spawnDelta(-vac.cost);
+      addLog("Enjoyed " + vac.name + " (+" + vac.repGain + " Rep).");
+      SoundEngine.playCash();
+      showToast("Trip complete: " + vac.name + "!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "donate-charity") {
+      const chId = target.getAttribute("data-id");
+      const ch = CHARITIES.find(function (c) { return c.id === chId; });
+      if (!ch) return;
+      if (state.cash < ch.amount) {
+        SoundEngine.playError();
+        showToast("Need " + formatPeso(ch.amount) + " cash to fund this foundation.", "error");
+        return;
+      }
+      state.cash -= ch.amount;
+      state.totalDonated = (state.totalDonated || 0) + ch.amount;
+      state.reputation += ch.repGain;
+      state.happiness = clamp(state.happiness + ch.happyGain, 0, 100);
+      spawnDelta(-ch.amount);
+      addLog("Donated " + formatPeso(ch.amount) + " to " + ch.name + ".");
+      SoundEngine.playCash();
+      showToast("Donated to " + ch.name + " (+" + ch.repGain.toLocaleString("en-US") + " Rep)!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
     if (action === "bank-pct") {
       const pct = parseFloat(target.getAttribute("data-pct"));
       const inp = document.getElementById("bank-amount-input");
@@ -2559,12 +3002,134 @@
       return;
     }
 
+    if (action === "dev-custom-cash") {
+      const inp = document.getElementById("dev-cash-input");
+      const amt = Math.floor(Number(inp ? inp.value : 0));
+      if (!amt || amt <= 0) { SoundEngine.playError(); showToast("Enter a positive peso amount.", "error"); return; }
+      state.cash += amt;
+      state.netWorthHistory.push({
+        label: "Y" + state.year + " M" + state.month,
+        value: calcNetWorth(state)
+      });
+      if (state.netWorthHistory.length > 36) state.netWorthHistory.shift();
+      if (inp) inp.value = "";
+      spawnDelta(amt);
+      SoundEngine.playCash();
+      showToast("Dev: Added " + formatPeso(amt), "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-set-cash") {
+      const inp = document.getElementById("dev-cash-input");
+      const amt = Math.floor(Number(inp ? inp.value : 0));
+      if (isNaN(amt) || amt < 0) { SoundEngine.playError(); showToast("Enter 0 or a positive peso amount.", "error"); return; }
+      const diff = amt - state.cash;
+      state.cash = amt;
+      state.netWorthHistory.push({
+        label: "Y" + state.year + " M" + state.month,
+        value: calcNetWorth(state)
+      });
+      if (state.netWorthHistory.length > 36) state.netWorthHistory.shift();
+      if (inp) inp.value = "";
+      spawnDelta(diff);
+      SoundEngine.playCash();
+      showToast("Dev: Cash set to " + formatPeso(amt), "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
     if (action === "dev-restore") {
       state.health = 100;
       state.energy = 100;
       state.happiness = 100;
       SoundEngine.playCash();
-      showToast("Dev: Stats restored to 100%", "success");
+      showToast("Dev: Vitals restored to 100%", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-rep") {
+      state.reputation += 100;
+      SoundEngine.playCash();
+      showToast("Dev: Added +100 Reputation", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-unlock-career") {
+      COURSES.forEach(function (c) {
+        if (state.completedCourses.indexOf(c.id) === -1) {
+          state.completedCourses.push(c.id);
+        }
+        state.courseProgress[c.id] = c.sessions;
+      });
+      SoundEngine.playCash();
+      showToast("Dev: All certifications unlocked!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-exp") {
+      state.experienceMonths += 96;
+      SoundEngine.playCash();
+      showToast("Dev: Added +96 months work experience", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-max-biz") {
+      if (state.businesses.length === 0) {
+        SoundEngine.playError();
+        showToast("Own at least 1 business first.", "warn");
+        return;
+      }
+      state.businesses.forEach(function (b) {
+        b.level = 5;
+        b.condition = 100;
+        b.awareness = 100;
+        if (b.monthsOpen < 6) b.monthsOpen = 6;
+      });
+      SoundEngine.playCash();
+      showToast("Dev: All owned businesses maxed to Level 5!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-max-staff") {
+      let updated = 0;
+      state.businesses.forEach(function (b) {
+        STAFF_ROLES.forEach(function (r) {
+          if (b.staff[r.key]) {
+            b.staff[r.key].skill = 100;
+            b.staff[r.key].morale = 100;
+            updated += 1;
+          }
+        });
+      });
+      if (updated === 0) {
+        SoundEngine.playError();
+        showToast("No hired staff found to boost.", "warn");
+        return;
+      }
+      SoundEngine.playCash();
+      showToast("Dev: Boosted " + updated + " staff to 100% Skill & Morale!", "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if (action === "dev-day") {
+      advanceDayInternal(true);
+      SoundEngine.playClick();
+      showToast("Dev: Advanced +1 day", "success");
       saveState();
       renderAll();
       return;
@@ -2586,13 +3151,35 @@
       return;
     }
 
+    if (action === "dev-age") {
+      state.age += 1;
+      state.year += 1;
+      addLog("Dev: Aged up to " + state.age + ".");
+      SoundEngine.playClick();
+      showToast("Dev: Age is now " + state.age, "success");
+      saveState();
+      renderAll();
+      return;
+    }
+
     if (action === "dev-event") {
       closeModal();
       triggerRandomEvent();
       return;
     }
+
+    if (action === "dev-lock") {
+      state.settings.devUnlocked = false;
+      devTapCount = 0;
+      SoundEngine.playClick();
+      showToast("Developer Mode hidden.", "success");
+      saveState();
+      openSettingsModal();
+      return;
+    }
   }
 
+  // Event Listeners
   document.addEventListener("click", function (e) {
     const navBtn = e.target.closest(".nav-btn");
     if (navBtn) {
@@ -2647,6 +3234,7 @@
     lastTickTs = performance.now();
   });
 
+  // Real-Time 15s-Per-Day Hybrid Clock Loop (Offline progress disabled)
   setInterval(function () {
     const now = performance.now();
     const dt = now - lastTickTs;
@@ -2656,6 +3244,7 @@
       return;
     }
 
+    // Clamp dt so tab-switch sleep never grants offline catch-up
     const safeDt = Math.min(dt, 1000);
     dayElapsedMs += safeDt;
 
@@ -2670,5 +3259,6 @@
     }
   }, 250);
 
+  // Initial Boot
   renderAll();
 })();
