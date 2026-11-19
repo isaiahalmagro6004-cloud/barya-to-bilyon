@@ -110,6 +110,7 @@ select {
   color: var(--text-secondary);
 }
 
+/* App Shell */
 .app-shell {
   position: relative;
   width: 100%;
@@ -130,6 +131,7 @@ select {
   }
 }
 
+/* Header */
 .app-header {
   position: sticky;
   top: 0;
@@ -270,6 +272,7 @@ select {
   transition: width 0.25s linear;
 }
 
+/* Main Content */
 .main-content {
   flex: 1;
   padding: 16px 16px calc(84px + env(safe-area-inset-bottom));
@@ -290,6 +293,7 @@ select {
   }
 }
 
+/* Cards & Typography */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -357,6 +361,7 @@ select {
   gap: 6px;
 }
 
+/* Vital Bars */
 .vitals-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -419,6 +424,7 @@ select {
   background: var(--accent-red);
 }
 
+/* Buttons */
 .btn {
   min-height: 44px;
   padding: 10px 14px;
@@ -532,6 +538,7 @@ select {
   color: var(--text-secondary);
 }
 
+/* Segmented Controls */
 .segmented {
   display: grid;
   grid-auto-flow: column;
@@ -563,6 +570,7 @@ select {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
+/* Chart Card */
 .chart-wrap {
   width: 100%;
   display: flex;
@@ -584,6 +592,7 @@ select {
   color: var(--text-muted);
 }
 
+/* Virtual Bank Card */
 .vault-card {
   border-radius: 18px;
   padding: 18px;
@@ -638,6 +647,7 @@ html.theme-light .vault-card {
   color: rgba(255, 255, 255, 0.72);
 }
 
+/* Form Controls */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -674,6 +684,7 @@ html.theme-light .vault-card {
   gap: 6px;
 }
 
+/* Ledger & Rows */
 .ledger-row {
   display: flex;
   align-items: center;
@@ -722,6 +733,7 @@ html.theme-light .vault-card {
   gap: 6px;
 }
 
+/* Activity Feed */
 .activity-list {
   display: flex;
   flex-direction: column;
@@ -750,6 +762,7 @@ html.theme-light .vault-card {
   flex-shrink: 0;
 }
 
+/* Bottom Tab Bar */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -812,6 +825,7 @@ html.theme-light .vault-card {
   white-space: nowrap;
 }
 
+/* Center Modal Dialog */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -880,6 +894,7 @@ html.theme-light .vault-card {
   gap: 12px;
 }
 
+/* Toast Notification Banner */
 .toast-banner {
   position: fixed;
   top: 12px;
@@ -918,6 +933,7 @@ html.theme-light .vault-card {
   border-color: var(--accent-red);
 }
 
+/* Floating Currency Popups */
 .floating-deltas {
   position: fixed;
   top: 56px;
@@ -962,6 +978,7 @@ html.theme-light .vault-card {
   }
 }
 
+/* Settings & Secret Dev Mode */
 .setting-row {
   display: flex;
   align-items: center;
@@ -999,9 +1016,50 @@ html.theme-light .vault-card {
   color: var(--accent-gold);
 }
 
+.dev-group-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
 .dev-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.dev-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dev-input-row .text-input {
+  min-height: 38px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.luxury-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.luxury-stat-box {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.milestone-row {
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
 
