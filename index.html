@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Barya to Bilyon</title>
+  <meta name="description" content="A realistic Philippine life and business simulation RPG where you climb from ₱2,500 cash on hand to a ₱1 Trillion empire." />
+  <meta property="og:title" content="Barya to Bilyon" />
+  <meta property="og:description" content="A realistic Philippine life and business simulation RPG where you climb from ₱2,500 cash on hand to a ₱1 Trillion empire." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-shell" class="app-shell">
+    <div id="floating-deltas" class="floating-deltas" aria-hidden="true"></div>
+    <div id="toast-banner" class="toast-banner" role="status" aria-live="polite"></div>
+
+    <header class="app-header">
+      <div class="header-top-row">
+        <div class="header-identity">
+          <div class="brand-row">
+            <span class="brand-title">Barya to Bilyon</span>
+          </div>
+          <div id="hdr-calendar" class="header-meta num">Age 18 · Jan 1, Y1</div>
+        </div>
+        <div class="header-controls">
+          <button id="btn-toggle-clock" class="icon-btn" type="button" aria-label="Pause or play simulation clock" title="Pause / Play">
+            <svg id="icon-clock-pause" class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+              <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+            </svg>
+            <svg id="icon-clock-play" class="svg-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="6 4 20 12 6 20 6 4"></polygon>
+            </svg>
+          </button>
+          <button id="btn-open-settings" class="icon-btn" type="button" aria-label="Open settings" title="Settings">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-finance-row">
+        <div class="finance-metric">
+          <span class="finance-label">Cash on Hand</span>
+          <span id="hdr-cash" class="finance-value num text-emerald">₱2,500</span>
+        </div>
+        <div class="finance-metric finance-metric-right">
+          <span class="finance-label">Net Worth</span>
+          <span id="hdr-networth" class="finance-value num">₱2,500</span>
+        </div>
+      </div>
+
+      <div class="day-progress-track" aria-hidden="true">
+        <div id="day-progress-fill" class="day-progress-fill"></div>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-content" tabindex="-1"></main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-btn active" type="button" data-tab="home">
+        <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5"></path>
+          <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path>
+        </svg>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="career">
+        <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <span class="nav-label">Career</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="negosyo">
+        <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l1-5h16l1 5"></path>
+          <path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"></path>
+          <path d="M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"></path>
+        </svg>
+        <span class="nav-label">Negosyo</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="assets">
+        <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 21h18"></path>
+          <path d="M5 21V7l7-4 7 4v14"></path>
+          <path d="M9 9h1"></path>
+          <path d="M14 9h1"></path>
+          <path d="M9 13h1"></path>
+          <path d="M14 13h1"></path>
+          <path d="M11 21v-4h2v4"></path>
+        </svg>
+        <span class="nav-label">Assets</span>
+      </button>
+      <button class="nav-btn" type="button" data-tab="bank">
+        <svg class="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+          <line x1="6" y1="15" x2="10" y2="15"></line>
+        </svg>
+        <span class="nav-label">Bank</span>
+      </button>
+    </nav>
+  </div>
+
+  <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-dialog" class="modal-dialog">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title"></h2>
+        <button id="btn-close-modal" class="icon-btn icon-btn-sm" type="button" aria-label="Close modal">
+          <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
